@@ -474,7 +474,7 @@ self.addEventListener("fetch", (event) => {
   } else {
     app.use(handler);
   }
-  app.listen({ port }, (err, addr) => {
+  app.listen({ port, host: "0.0.0.0" }, (err, addr) => {
     if (err) {
       console.error("Server failed to start:", err);
       process.exit(1);
