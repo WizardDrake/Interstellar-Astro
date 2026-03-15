@@ -2,18 +2,12 @@ FROM oven/bun:1
 
 WORKDIR /app
 
-# install pnpm (some astro deps expect it)
-RUN bun install -g pnpm
-
-# copy dependency files first for caching
-COPY package.json bun.lockb* pnpm-lock.yaml* ./
-
+COPY package.json bun.lockb* ./
 RUN bun install
 
-# copy source
 COPY . .
 
-# build astro during image build (not runtime)
+# build astro
 RUN bunx astro build
 
 ENV HOST=0.0.0.0
@@ -22,4 +16,4 @@ ENV NODE_ENV=production
 
 EXPOSE 3000
 
-CMD ["bun", "run", "dist/server/entry.mjs"]
+CMD ["bun", "dist/server/entry.mjs"]
