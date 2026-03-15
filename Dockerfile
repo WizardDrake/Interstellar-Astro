@@ -20,7 +20,7 @@ COPY . .
 RUN bun run build || true
 
 # Expose port (Astro + Fastify usually runs 3000)
-EXPOSE 3000
+EXPOSE 8080
 
 # Start server
 CMD ["bun", "start"]
