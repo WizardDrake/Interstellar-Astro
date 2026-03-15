@@ -7,9 +7,13 @@ RUN bun install
 
 COPY . .
 
-ENV HOST=0.0.0.0
+# Build Astro ahead of time so runtime doesn't restart
+RUN bun run build
+
 ENV PORT=8080
+ENV HOST=0.0.0.0
 ENV NODE_ENV=production
+ENV FIRST=false
 
 EXPOSE 8080
 
