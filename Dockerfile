@@ -7,13 +7,13 @@ RUN bun install
 
 COPY . .
 
-# Build Astro ahead of time so runtime doesn't restart
-RUN bun run build
+# Build Astro without typechecking
+RUN bunx astro build
 
 ENV PORT=8080
 ENV HOST=0.0.0.0
-ENV NODE_ENV=production
 ENV FIRST=false
+ENV NODE_ENV=production
 
 EXPOSE 8080
 
