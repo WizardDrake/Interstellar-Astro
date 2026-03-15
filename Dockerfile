@@ -11,9 +11,9 @@ COPY . .
 RUN bunx astro build
 
 ENV HOST=0.0.0.0
-ENV PORT=3000
+ENV PORT=8080
 ENV NODE_ENV=production
 
 EXPOSE 8080
 
-CMD ["bun", "dist/server/entry.mjs"]
+CMD ["node", "dist/server/entry.mjs"]
