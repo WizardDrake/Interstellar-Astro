@@ -1,14 +1,26 @@
-FROM node:bookworm-slim AS builder
-ENV NODE_ENV=production
+# Use Bun base image
+FROM oven/bun:1.1
 
+# Install pnpm
+RUN bun install -g pnpm
+
+# Set working directory
 WORKDIR /app
 
-RUN npm install -g pnpm
+# Copy package files first (better caching)
+COPY package.json bun.lockb* pnpm-lock.yaml* ./
 
-COPY ["package.json", "pnpm-lock.yaml*", "./"]
+# Install dependencies
+RUN bun install
 
-RUN pnpm install
-
+# Copy rest of project
 COPY . .
 
-RUN pnpm build
+# Build Astro (if project uses build step)
+RUN bun run build || true
+
+# Expose port (Astro + Fastify usually runs 3000)
+EXPOSE 3000
+
+# Start server
+CMD ["bun", "start"]
