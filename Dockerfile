@@ -1,26 +1,25 @@
-# Use Bun base image
-FROM oven/bun:1.1
+FROM oven/bun:1
 
-# Install pnpm
-RUN bun install -g pnpm
-
-# Set working directory
 WORKDIR /app
 
-# Copy package files first (better caching)
+# install pnpm (some astro deps expect it)
+RUN bun install -g pnpm
+
+# copy dependency files first for caching
 COPY package.json bun.lockb* pnpm-lock.yaml* ./
 
-# Install dependencies
 RUN bun install
 
-# Copy rest of project
+# copy source
 COPY . .
 
-# Build Astro (if project uses build step)
-RUN bun run build || true
+# build astro during image build (not runtime)
+RUN bunx astro build
 
-# Expose port (Astro + Fastify usually runs 3000)
-EXPOSE 8080
+ENV HOST=0.0.0.0
+ENV PORT=3000
+ENV NODE_ENV=production
 
-# Start server
-CMD ["bun", "start"]
+EXPOSE 3000
+
+CMD ["bun", "run", "dist/server/entry.mjs"]
